@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember Studio</title>
+
+    <link rel="icon" href="/assets/logo/logo.png">
+    <link rel="stylesheet" href="/style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Parallax Hero Section -->
+    <section class="hero-section">
+        <div class="parallax-background">
+            <div class="parallax-layer layer-1" data-depth="0.1">
+                <img src="/assets/background/bg1.png" alt="layer-1">
+            </div>
+            <div class="parallax-layer layer-2" data-depth="0.2">
+                <img src="/assets/background/bg2.png" alt="layer-2">
+            </div>
+            <div class="parallax-layer layer-3" data-depth="0.3">
+                <img src="/assets/background/bg3.png" alt="layer-3">
+            </div>
+            <div class="parallax-layer layer-4" data-depth="0.4">
+                <img src="/assets/background/bg4.png" alt="layer-4">
+            </div>
+            <div class="parallax-layer layer-5" data-depth="0.5">
+                <img src="/assets/background/bg5.png" alt="layer-5">
+            </div>
+            <div class="parallax-layer overlay" data-depth="0"></div>
+        </div>
+
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Header -->
+        <header>
+            <a href="#" class="logo-link">
+                <img src="/assets/logo/logo.png" class="logo">
+            </a>
+
+            <nav class="navigation">
+                <ul>
+                    <li><a href="#" id="homeLink">Home</a></li>
+                    <li><a href="/login.html" id="loginButton">Log In</a></li>
+                    <li><a href="#" id="signupButton" class="signup-btn">Sign Up</a></li>
+                    <li>
+                        <a href="#" id="search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="hamburger" id="hamburgerButton">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">EMBER <span class="highlight">STUDIO</span></h1>
+                <p class="hero-subtitle">Just like the CCS Phoenix we will rise from the Ashes</p>
+                <div class="hero-cta">
+                    <a href="#login"><button class="cta-primary">Get Started</button></a>
+                    <button class="cta-secondary">
+                        <i class="fas fa-play-circle"></i> View
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <h3>50+</h3>
+                        <p>Projects Completed</p>
+                    </div>
+                    <div class="stat">
+                        <h3>6</h3>
+                        <p>Expert Team Members</p>
+                    </div>
+                    <div class="stat">
+                        <h3>100%</h3>
+                        <p>Client Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>EXPLORE</h2>
+            <div class="sidebar-actions">
+                <button class="sidebar-settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#about"><i class="fas fa-users"></i> About Us</a></li>
+            <li><a href="#team"><i class="fas fa-palette"></i> The Team</a></li>
+            <li><a href="#gallery"><i class="fas fa-images"></i> Gallery</a></li>
+            <li><a href="#services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+            <li><a href="#"><i class="fas fa-handshake"></i> Connect with Us</a></li>
+            <li><a href="#funfact"><i class="fas fa-lightbulb"></i> Fun Fact</a></li>
+            <li><a href="#"><i class="fas fa-plus"></i> Extras</a></li>
+        </ul>
+
+        <div class="sidebar-profile">
+            <img src="/assets/extra/pfp.jpg" class="profile-pic">
+            <div class="profile-info">
+                <span class="profile-name">WELCOME</span>
+                <span class="profile-role">Guest User</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">WHO WE ARE</span>
+                    <h2>EMBER <span class="highlight">STUDIO</span></h2>
+                    <p class="section-description">Ember Studio is a collective of passionate BSEMC students from Gordon College, dedicated to pushing the boundaries of digital creativity and innovation.</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-image">
+                        <div class="image-frame">
+                            <img src="/assets/logo/logo.png" alt="Ember Studio Team">
+                            <div class="image-overlay"></div>
+                        </div>
+                    </div>
+                    <div class="about-text">
+                        <h3>ABOUT US</h3>
+                        <p>We specialize in creating immersive digital experiences through a unique blend of artistic vision and technical expertise. Our multidisciplinary approach allows us to deliver comprehensive solutions that captivate audiences and drive results.</p>
+                        <div class="about-features">
+                            <div class="feature">
+                                <i class="fas fa-paint-brush"></i>
+                                <h4>Creative Design</h4>
+                                <p>Innovative visual solutions that tell your story</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-code"></i>
+                                <h4>Development</h4>
+                                <p>technical implementation and solutions</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-gamepad"></i>
+                                <h4>Interactive Media</h4>
+                                <p>Engaging experiences across all platforms</p>
+                            </div>
+                        </div>
+                        <button class="learn-more">Learn More About Us</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Work Section -->
+        <section  id="funfact" class="featured-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">FEATURED WORK</span>
+                    <h2>Work of <span class="highlight">The Month</span></h2>
+                </div>
+                
+                <div class="featured-work">
+                    <div class="work-image">
+                        <img src="/assets/extra/endlessshore (1).png" alt="Endless Shore">
+                        <div class="work-badge">FEATURED</div>
+                    </div>
+                    <div class="work-details">
+                        <h3>Endless Shore</h3>
+                        <p class="work-category">Game Development Project</p>
+                        <p class="work-description">A captivating adventure game that combines stunning visual storytelling with engaging gameplay mechanics. Explore mysterious shores and uncover hidden secrets in this immersive experience.</p>
+                        <div class="work-tech">
+                            <span>Godot Engine</span>
+                            
+                            <span>Aseprite</span>
+                        </div>
+                        <div class="work-actions">
+                            <button class="btn-view">
+                                <i class="fas fa-external-link-alt"></i> View Project
+                            </button>
+                            <button class="btn-demo">
+                                <i class="fas fa-play"></i> Play Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">OUR SERVICES</span>
+                    <h2>What We <span class="highlight">Excel At</span></h2>
+                </div>
+                
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3>Art Commission</h3>
+                        <p>Custom digital artwork and illustrations tailored to your vision. From character design to environmental art.</p>
+                        <ul class="service-features">
+                            <li>Character Design</li>
+                            <li>Concept Art</li>
+                            <li>Digital Illustration</li>
+                        </ul>
+                        <a href="#" class="service-link">View Portfolio <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3>Game Development</h3>
+                        <p>Full-cycle game development from concept to deployment across multiple platforms and genres.</p>
+                        <ul class="service-features">
+                            <li>2D/3D Games</li>
+                            <li>Mobile Games</li>
+                            <li>Interactive Experiences</li>
+                        </ul>
+                        <a href="#" class="service-link">See Projects <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>Web Development</h3>
+                        <p>Responsive and dynamic web solutions with modern frameworks and cutting-edge technologies.</p>
+                        <ul class="service-features">
+                            <li>Frontend Development</li>
+                            <li>Backend Systems</li>
+                        </ul>
+                        <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Gallery -->
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">OUR PORTFOLIO</span>
+                    <h2>Creative <span class="highlight">Showcase</span></h2>
+                    <p class="section-description">Explore our collection of digital creations and innovative projects</p>
+                </div>
+                
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        
+                        <img src="/assets/artworks/ECHOES OF REALITY (1).jpg" alt="Project 1">
+                        <div class="gallery-overlay">
+                            <h4>Echoes of Reality</h4>
+                            <p>Photoshop</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="/assets/artworks/art_productsamples.jpeg" alt="Project 2">
+                        <div class="gallery-overlay">
+                            <h4>Art Product Button Pins</h4>
+                            <p>Artwork</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="/assets/artworks/photo manipulation.png" alt="Project 3">
+                        <div class="gallery-overlay">
+                            <h4>Fantasy Dream Like</h4>
+                            <p>Photoshop</p>
+                        </div>
+                    </div>
+                   <div class="gallery-item">
+                    <a href="/resume/navarro.html" class="gallery-link">
+                    <img src="/assets/extra/endlessshore (1).png" alt="Project 4">
+                    <div class="gallery-overlay">
+                      <h4>Endless Shore</h4>
+                     <p>Splash Art</p>
+                 </div>
+                     </a>
+            </div>
+                </div>
+                
+                <div class="gallery-cta">
+                    <button class="btn-view-all">
+                        <i class="fas fa-images"></i> View Full Gallery
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Team Section -->
+<section id="team" class="team-section">
+    <div class="team-container">
+        <div class="team-header-wrapper">
+            <h1>MEET THE TEAM</h1>
+            <p class="subtitle">EMBER STUDIO CONSISTS OF 6 BSEMC STUDENTS</p>
+        </div>
+        
+        <div class="team-card" id="team-card-1">
+            <div class="avatar">
+                <img src="/assets/team/ange.png" alt="Angelyn Ann Andal">
+            </div>
+            <div class="info">
+                <h3>ANDAL, ANGELYN ANN</h3>
+                <span>ARTIST</span>
+            </div>
+        </div>
+
+
+        <a href="/resume/CedricPortfolio/index.html">
+        <div class="team-card" id="team-card-2">
+            <div class="avatar">
+                <img src="/assets/team/cj.png" alt="Cedric John Apalit">
+            </div>
+            <div class="info">
+                <h3>APALIT, CEDRIC JOHN</h3>
+                <span>GAME DEVELOPER</span>
+            </div>
+        </div>
+        </a>
+
+        <div class="team-card" id="team-card-3">
+            <div class="avatar">
+                <img src="/assets/team/tatay.png" alt="Dennis Basa">
+            </div>
+            <div class="info">
+                <h3>BASA, DENNIS</h3>
+                <span>TATAY NG BAYAN</span>
+            </div>
+        </div>
+
+        <div class="team-card" id="team-card-4">
+            <div class="avatar">
+                <img src="/assets/team/ange.png" alt="Aleizza Joy Daguman">
+            </div>
+            <div class="info">
+                <h3>DAGUMAN, ALEIZZA JOY</h3>
+                <span>ARTIST</span>
+            </div>
+        </div>
+
+        <a href="/resume/MY OWN PORTFOLIO/resume.html" class="team-card-link">
+
+        <div class="team-card" id="team-card-5">
+            <div class="avatar">
+                <img src="/assets/team/lloyd.png" alt="Jan Loyd De Dios">
+            </div>
+            <div class="info">
+                <h3>DE DIOS, JAN LOYD</h3>
+                <span>GAME DEV YARN</span>
+            </div>
+        </div>
+        </a>
+
+        
+        <a href="/resume/navarro.html">
+        <div class="team-card" id="team-card-6">
+            
+            <div class="avatar">
+                <img src="/assets/team/cza.png" alt="Czarina Marie Navarro">
+            </div>
+            <div class="info">
+                <h3>NAVARRO, CZARINA MARIE</h3>
+                <span>GAME DEV YARN</span>
+            </div>
+            
+        </div>
+        </a>
+    </div>
+</section>
+
+
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Bring Your <span class="highlight">Vision to Life?</span></h2>
+                <p>Let's create something extraordinary together. Contact us to discuss your project.</p>
+                <div class="cta-buttons">
+                    <button class="btn-primary">Start a Project</button>
+                    <button class="btn-secondary">Commission</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="/assets/logo/logo.png" alt="Ember Studio Logo">
+                        
+                    </div>
+                    <p class="footer-description">
+                        A creative digital agency of BSEMC students from Gordon College, specializing in innovative digital solutions, game development, and interactive experiences.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Gallery</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Art Commission</a></li>
+                        <li><a href="#">Game Development</a></li>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">UI/UX Design</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Dyan lng sa Tabi Tabi, D Makita Aking Halaga Rd.</p>
+                        <p><i class="fas fa-phone"></i> (64+) 123 4567 8910</p>
+                        <p><i class="fas fa-envelope"></i> emberstudio@gmail.com</p>
+                       
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Ember Studio. All rights reserved. | BSEMC Students of Gordon College</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/script/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+</body>
+</html>
