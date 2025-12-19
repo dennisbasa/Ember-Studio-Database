@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Ember Studio</title>
+
+    <link rel="icon" href="/public/assets/logo/logo.png">
+    <link rel="stylesheet" href="/public/style.css">
+    
+    <!-- Font Awesome with fix for tracking prevention -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" crossorigin="anonymous">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js"></script>
+
+    <style>
+        .signup-page {
+            min-height: 100vh;
+            background-image: url('/public/assets/background/login.png');
+            background-color: rgba(10, 10, 10, 0.5); 
+            background-blend-mode: overlay; 
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            background-attachment: fixed; 
+        }
+
+        .signup-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 460px;
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff4500, #ff8c00);
+        }
+
+        .signup-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .signup-logo img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+        }
+
+        .signup-logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .signup-logo p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4500;
+            font-size: 1.1rem;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: #ff4500;
+            background: rgba(255, 69, 0, 0.05);
+            box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.1);
+        }
+
+        .input-with-icon input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .password-strength.weak .password-strength-bar {
+            background: #ff4500;
+            width: 33%;
+        }
+
+        .password-strength.medium .password-strength-bar {
+            background: #ffa500;
+            width: 66%;
+        }
+
+        .password-strength.strong .password-strength-bar {
+            background: #00ff88;
+            width: 100%;
+        }
+
+        .password-requirements {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-requirements.show {
+            display: block;
+        }
+
+        .password-requirements ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .password-requirements li {
+            margin-bottom: 3px;
+        }
+
+        .password-requirements li.valid {
+            color: #00ff88;
+        }
+
+        .password-requirements li.valid::before {
+            content: '✓ ';
+        }
+
+        .terms-agreement {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 10px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .terms-agreement input[type="checkbox"] {
+            accent-color: #ff4500;
+            margin-top: 3px;
+        }
+
+        .terms-agreement a {
+            color: #ff4500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .terms-agreement a:hover {
+            color: #ff8c00;
+            text-decoration: underline;
+        }
+
+        .signup-button {
+            background: linear-gradient(135deg, #ff4500, #ff8c00);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.3);
+        }
+
+        .signup-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-button:disabled {
+            background: linear-gradient(135deg, #666, #888);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+
+        .social-signup {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.google:hover {
+            border-color: #DB4437;
+            background: rgba(219, 68, 55, 0.1);
+        }
+
+        .social-btn.facebook:hover {
+            border-color: #4267B2;
+            background: rgba(66, 103, 178, 0.1);
+        }
+
+        .login-link {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: #ff4500;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #ff8c00;
+            text-decoration: underline;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .back-home a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-home a:hover {
+            color: #ff4500;
+        }
+
+        /* SUCCESS NOTIFICATION STYLES */
+        .notification-container {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .success-notification {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-left: 4px solid #00ff88;
+            border-radius: 12px;
+            padding: 20px 25px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .success-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .notification-message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00cc6a);
+            width: 100%;
+            border-radius: 0 0 12px 12px;
+            transform-origin: left;
+            animation: progressBar 3s linear forwards;
+        }
+
+        @keyframes progressBar {
+            0% {
+                transform: scaleX(1);
+            }
+            100% {
+                transform: scaleX(0);
+            }
+        }
+
+        @keyframes successCheck {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .notification-icon i {
+            animation: successCheck 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 40px 20px;
+                margin: 0 10px;
+            }
+
+            .signup-logo h1 {
+                font-size: 2rem;
+            }
+
+            .social-signup {
+                flex-direction: column;
+            }
+
+            .success-notification {
+                min-width: 280px;
+                max-width: 280px;
+                right: 10px;
+                top: 20px;
+            }
+
+            .notification-container {
+                right: 10px;
+                top: 20px;
+            }
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 10000;
+            max-width: 300px;
+            display: none;
+        }
+        
+        /* Error message */
+        .error-message {
+            color: #ff4500;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-home">
+        <a href="/public/embers.html">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="signup-page">
+        <div class="signup-container">
+            <div class="signup-logo">
+                <img src="/public/assets/logo/logo.png" alt="Ember Studio Logo">
+                <h1>EMBER STUDIO</h1>
+                <p>Create your account</p>
+            </div>
+
+            <form class="signup-form" id="signupForm">
+                <div class="form-group">
+                    <label for="displayName">Full Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input 
+                            type="text" 
+                            id="displayName" 
+                            name="displayName" 
+                            placeholder="Enter your full name" 
+                            required
+                            autocomplete="name"
+                            inputmode="text"
+                        >
+                    </div>
+                    <div class="error-message" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your email" 
+                            required
+                            autocomplete="email"
+                            inputmode="email"
+                        >
+                    </div>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Create a strong password" 
+                            required
+                            autocomplete="new-password"
+                            inputmode="text"
+                        >
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="password-strength-bar"></div>
+                    </div>
+                    <div class="password-requirements" id="passwordRequirements">
+                        <ul>
+                            <li id="reqLength">At least 8 characters</li>
+                            <li id="reqUppercase">One uppercase letter</li>
+                            <li id="reqLowercase">One lowercase letter</li>
+                            <li id="reqNumber">One number</li>
+                            <li id="reqSpecial">One special character</li>
+                        </ul>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            placeholder="Confirm your password" 
+                            required
+                            autocomplete="new-password"
+                            inputmode="text"
+                        >
+                    </div>
+                    <div id="passwordMatch" style="color: rgba(255, 255, 255, 0.5); font-size: 0.8rem; margin-top: 5px;"></div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="terms-agreement">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>
+                    </label>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+
+                <button type="submit" class="signup-button" id="signupButton">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+
+                <div class="divider">
+                    <span>Or sign up with</span>
+                </div>
+
+                <div class="social-signup">
+                    <button type="button" class="social-btn google" id="googleSignUp">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="social-btn facebook" id="facebookSignUp">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                </div>
+
+                <p class="login-link">
+                    Already have an account? <a href="/public/login.html">Log in here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-panel" id="debugPanel">
+        <strong>Debug Info:</strong>
+        <div id="debugInfo">Loading...</div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXpaV1WTVSi4_0WvjmUehuEtIVoz0SP5M",
+            authDomain: "emberstudio-f434a.firebaseapp.com",
+            projectId: "emberstudio-f434a",
+            storageBucket: "emberstudio-f434a.firebasestorage.app",
+            messagingSenderId: "1073426265450",
+            appId: "1:1073426265450:web:713d6e2035e9b009fd6113",
+            measurementId: "G-EPS9CK6J57"
+        };
+
+        // Initialize Firebase
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if Firebase is available
+            if (typeof firebase === 'undefined') {
+                showErrorNotification('Firebase SDK failed to load. Please check your internet connection.');
+                return;
+            }
+
+            try {
+                // Initialize Firebase
+                const app = firebase.initializeApp(firebaseConfig);
+                const analytics = firebase.getAnalytics(app);
+                const auth = firebase.getAuth(app);
+                
+                // Make available globally
+                window.firebaseApp = app;
+                window.firebaseAuth = auth;
+                window.firebaseAnalytics = analytics;
+                
+                console.log('🔥 Firebase initialized successfully!');
+                
+                // Initialize the application
+                initApp(auth);
+                
+            } catch (error) {
+                console.error('❌ Firebase initialization error:', error);
+                showErrorNotification('Failed to initialize authentication system. Please refresh the page.');
+            }
+        });
+
+        function initApp(auth) {
+            console.log('=== 🔥 FIREBASE INITIALIZED ===');
+            console.log('Auth Domain:', firebaseConfig.authDomain);
+            console.log('Project ID:', firebaseConfig.projectId);
+            console.log('==============================');
+
+            const signupForm = document.getElementById('signupForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const passwordStrength = document.getElementById('passwordStrength');
+            const passwordRequirements = document.getElementById('passwordRequirements');
+            const passwordMatch = document.getElementById('passwordMatch');
+            const signupButton = document.getElementById('signupButton');
+            const googleSignUpBtn = document.getElementById('googleSignUp');
+            const facebookSignUpBtn = document.getElementById('facebookSignUp');
+            const backHomeLink = document.querySelector('.back-home a');
+            const notificationContainer = document.getElementById('notificationContainer');
+            const debugPanel = document.getElementById('debugPanel');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            // Show debug panel
+            debugPanel.style.display = 'block';
+            debugInfo.innerHTML = `
+                Firebase: Initialized ✅<br>
+                Hostname: ${window.location.hostname}<br>
+                Protocol: ${window.location.protocol}<br>
+                Auth: ${auth ? 'Ready' : 'Not ready'}
+            `;
+            
+            // Password strength checker
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                
+                // Length requirement
+                if (password.length >= 8) strength++;
+                
+                // Uppercase requirement
+                if (/[A-Z]/.test(password)) strength++;
+                
+                // Lowercase requirement
+                if (/[a-z]/.test(password)) strength++;
+                
+                // Number requirement
+                if (/[0-9]/.test(password)) strength++;
+                
+                // Special character requirement
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+                
+                // Update visual indicators
+                document.getElementById('reqLength').className = password.length >= 8 ? 'valid' : '';
+                document.getElementById('reqUppercase').className = /[A-Z]/.test(password) ? 'valid' : '';
+                document.getElementById('reqLowercase').className = /[a-z]/.test(password) ? 'valid' : '';
+                document.getElementById('reqNumber').className = /[0-9]/.test(password) ? 'valid' : '';
+                document.getElementById('reqSpecial').className = /[^A-Za-z0-9]/.test(password) ? 'valid' : '';
+                
+                // Update strength bar
+                passwordStrength.className = 'password-strength';
+                if (strength >= 1) passwordStrength.classList.add('weak');
+                if (strength >= 3) passwordStrength.classList.add('medium');
+                if (strength >= 5) passwordStrength.classList.add('strong');
+                
+                return strength;
+            }
+            
+            // Password validation
+            function validatePassword(password) {
+                const requirements = {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password),
+                    special: /[^A-Za-z0-9]/.test(password)
+                };
+                
+                return Object.values(requirements).every(req => req === true);
+            }
+            
+            // Show password requirements
+            passwordInput.addEventListener('focus', function() {
+                passwordRequirements.classList.add('show');
+            });
+            
+            // Hide password requirements when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!passwordInput.contains(e.target) && !passwordRequirements.contains(e.target)) {
+                    passwordRequirements.classList.remove('show');
+                }
+            });
+            
+            // Check password strength on input
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                checkPasswordStrength(password);
+                
+                // Clear error
+                document.getElementById('passwordError').classList.remove('show');
+                
+                // Check password match
+                if (confirmPasswordInput.value) {
+                    checkPasswordMatch();
+                }
+            });
+            
+            // Check password match
+            function checkPasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                
+                if (confirmPassword === '') {
+                    passwordMatch.textContent = '';
+                    passwordMatch.style.color = 'rgba(255, 255, 255, 0.5)';
+                } else if (password === confirmPassword) {
+                    passwordMatch.textContent = '✓ Passwords match';
+                    passwordMatch.style.color = '#00ff88';
+                    document.getElementById('confirmPasswordError').classList.remove('show');
+                } else {
+                    passwordMatch.textContent = '✗ Passwords do not match';
+                    passwordMatch.style.color = '#ff4500';
+                }
+            }
+            
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+            
+            // Form submission handler
+            signupForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const displayName = document.getElementById('displayName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const termsAccepted = document.getElementById('terms').checked;
+                
+                // Clear all errors
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.classList.remove('show');
+                    el.textContent = '';
+                });
+                
+                // Validation
+                let isValid = true;
+                
+                if (!displayName) {
+                    document.getElementById('nameError').textContent = 'Full name is required';
+                    document.getElementById('nameError').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!email) {
+                    document.getElementById('emailError').textContent = 'Email is required';
+                    document.getElementById('emailError').classList.add('show');
+                    isValid = false;
+                } else {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                        document.getElementById('emailError').classList.add('show');
+                        isValid = false;
+                    }
+                }
+                
+                if (!password) {
+                    document.getElementById('passwordError').textContent = 'Password is required';
+                    document.getElementById('passwordError').classList.add('show');
+                    isValid = false;
+                } else if (!validatePassword(password)) {
+                    document.getElementById('passwordError').textContent = 'Password does not meet all requirements';
+                    document.getElementById('passwordError').classList.add('show');
+                    passwordRequirements.classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!confirmPassword) {
+                    document.getElementById('confirmPasswordError').textContent = 'Please confirm your password';
+                    document.getElementById('confirmPasswordError').classList.add('show');
+                    isValid = false;
+                } else if (password !== confirmPassword) {
+                    document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                    document.getElementById('confirmPasswordError').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!termsAccepted) {
+                    document.getElementById('termsError').textContent = 'You must accept the Terms of Service and Privacy Policy';
+                    document.getElementById('termsError').classList.add('show');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    showErrorNotification('Please fix the errors in the form');
+                    return;
+                }
+                
+                // Create account with Firebase
+                createAccountWithFirebase(email, password, displayName);
+            });
+            
+            // Firebase Account Creation Function
+            function createAccountWithFirebase(email, password, displayName) {
+                const originalText = signupButton.innerHTML;
+                signupButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+                signupButton.disabled = true;
+                
+                firebase.createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // User created successfully
+                        const user = userCredential.user;
+                        
+                        // Update profile with display name
+                        return firebase.updateProfile(user, {
+                            displayName: displayName
+                        }).then(() => {
+                            return user;
+                        });
+                    })
+                    .then((user) => {
+                        // Store user info
+                        localStorage.setItem('emberStudioUser', user.email);
+                        localStorage.setItem('emberStudioLoggedIn', 'true');
+                        localStorage.setItem('emberStudioUID', user.uid);
+                        localStorage.setItem('emberStudioName', displayName);
+                        localStorage.setItem('emberStudioLastLogin', new Date().toISOString());
+                        
+                        // Update debug info
+                        debugInfo.innerHTML += `<br>Account Created: ${user.email}`;
+                        
+                        showSuccessNotification(
+                            'Account Created Successfully!',
+                            `Welcome to Ember Studio, ${displayName}! Your account has been created. Redirecting to home page...`
+                        );
+                        
+                        // Reset button state
+                        signupButton.innerHTML = originalText;
+                        signupButton.disabled = false;
+                        
+                        // Clear form
+                        signupForm.reset();
+                        passwordRequirements.classList.remove('show');
+                        passwordMatch.textContent = '';
+                        passwordStrength.className = 'password-strength';
+                        
+                        // Redirect to home page after delay
+                        setTimeout(() => {
+                            window.location.href = '/index.html';
+                        }, 3000);
+                    })
+                    .catch((error) => {
+                        // Handle errors
+                        signupButton.innerHTML = originalText;
+                        signupButton.disabled = false;
+                        
+                        let errorMessage = 'Account creation failed. Please try again.';
+                        let errorField = 'general';
+                        
+                        switch(error.code) {
+                            case 'auth/email-already-in-use':
+                                errorMessage = 'This email is already registered. Please sign in instead.';
+                                errorField = 'email';
+                                break;
+                            case 'auth/invalid-email':
+                                errorMessage = 'Invalid email address format.';
+                                errorField = 'email';
+                                break;
+                            case 'auth/operation-not-allowed':
+                                errorMessage = 'Email/password sign-up is not enabled. Please contact support.';
+                                break;
+                            case 'auth/weak-password':
+                                errorMessage = 'Password is too weak. Please use a stronger password.';
+                                errorField = 'password';
+                                break;
+                            case 'auth/network-request-failed':
+                                errorMessage = 'Network error. Please check your connection.';
+                                break;
+                            case 'auth/too-many-requests':
+                                errorMessage = 'Too many attempts. Please try again later.';
+                                break;
+                        }
+                        
+                        // Show field-specific error
+                        if (errorField !== 'general') {
+                            const errorElement = document.getElementById(`${errorField}Error`);
+                            if (errorElement) {
+                                errorElement.textContent = errorMessage;
+                                errorElement.classList.add('show');
+                            }
+                        }
+                        
+                        showErrorNotification(errorMessage);
+                        
+                        // Update debug info
+                        debugInfo.innerHTML += `<br>Error: ${error.code}`;
+                    });
+            }
+            
+            // Google Sign-Up Handler
+            googleSignUpBtn.addEventListener('click', function() {
+                console.log('🔵 Google Sign-Up clicked');
+                
+                // Create Google provider instance
+                const provider = new firebase.auth.GoogleAuthProvider();
+                
+                // Add scopes
+                provider.addScope('profile');
+                provider.addScope('email');
+                
+                // Set custom parameters
+                provider.setCustomParameters({
+                    prompt: 'select_account'
+                });
+                
+                // Save button state
+                const originalText = googleSignUpBtn.innerHTML;
+                googleSignUpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+                googleSignUpBtn.disabled = true;
+                
+                // Sign in with popup
+                firebase.signInWithPopup(auth, provider)
+                    .then((result) => {
+                        console.log('✅ Google Sign-Up Success!');
+                        
+                        // The signed-in user info
+                        const user = result.user;
+                        
+                        // Store user info
+                        localStorage.setItem('emberStudioUser', user.email);
+                        localStorage.setItem('emberStudioLoggedIn', 'true');
+                        localStorage.setItem('emberStudioUID', user.uid);
+                        localStorage.setItem('emberStudioName', user.displayName || 'User');
+                        localStorage.setItem('emberStudioPhoto', user.photoURL || '');
+                        localStorage.setItem('emberStudioLastLogin', new Date().toISOString());
+                        
+                        // Update debug info
+                        debugInfo.innerHTML += `<br>Google Sign-In: ${user.email}`;
+                        
+                        showSuccessNotification(
+                            'Google Sign-Up Successful!',
+                            `Welcome ${user.displayName || 'User'}! Your account has been created. Redirecting to home page...`
+                        );
+                        
+                        // Reset button state
+                        googleSignUpBtn.innerHTML = originalText;
+                        googleSignUpBtn.disabled = false;
+                        
+                        // Redirect after delay
+                        setTimeout(() => {
+                            window.location.href = '../embers.html';
+                        }, 2000);
+                    })
+                    .catch((error) => {
+                        console.error('❌ Google Sign-Up Error:', error);
+                        
+                        // Reset button state
+                        googleSignUpBtn.innerHTML = originalText;
+                        googleSignUpBtn.disabled = false;
+                        
+                        let errorMessage = 'Google sign-up failed. Please try again.';
+                        
+                        switch(error.code) {
+                            case 'auth/popup-closed-by-user':
+                                errorMessage = 'Sign-up popup was closed. Please try again.';
+                                break;
+                            case 'auth/cancelled-popup-request':
+                                errorMessage = 'Sign-up cancelled. Please try again.';
+                                break;
+                            case 'auth/account-exists-with-different-credential':
+                                errorMessage = 'An account already exists with this email. Please sign in instead.';
+                                break;
+                            case 'auth/popup-blocked':
+                                errorMessage = 'Popup was blocked by browser. Please allow popups for this site.';
+                                break;
+                            case 'auth/unauthorized-domain':
+                                errorMessage = 'This domain is not authorized for Google sign-up.';
+                                break;
+                            case 'auth/operation-not-allowed':
+                                errorMessage = 'Google sign-up is not enabled. Please contact support.';
+                                break;
+                            case 'auth/network-request-failed':
+                                errorMessage = 'Network error. Please check your connection.';
+                                break;
+                        }
+                        
+                        showErrorNotification(errorMessage);
+                        
+                        // Update debug info
+                        debugInfo.innerHTML += `<br>Google Error: ${error.code}`;
+                    });
+            });
+            
+            // Facebook Sign-Up Handler
+            facebookSignUpBtn.addEventListener('click', function() {
+                const provider = new firebase.auth.FacebookAuthProvider();
+                provider.addScope('email');
+                provider.addScope('public_profile');
+                
+                const originalText = facebookSignUpBtn.innerHTML;
+                facebookSignUpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+                facebookSignUpBtn.disabled = true;
+                
+                firebase.signInWithPopup(auth, provider)
+                    .then((result) => {
+                        const user = result.user;
+                        
+                        // Store user info
+                        localStorage.setItem('emberStudioUser', user.email || '');
+                        localStorage.setItem('emberStudioLoggedIn', 'true');
+                        localStorage.setItem('emberStudioUID', user.uid);
+                        localStorage.setItem('emberStudioName', user.displayName || 'User');
+                        localStorage.setItem('emberStudioLastLogin', new Date().toISOString());
+                        
+                        // Update debug info
+                        debugInfo.innerHTML += `<br>Facebook Sign-In: ${user.email || 'No email'}`;
+                        
+                        showSuccessNotification(
+                            'Facebook Sign-Up Successful!',
+                            `Welcome ${user.displayName || 'User'}! Your account has been created. Redirecting to home page...`
+                        );
+                        
+                        facebookSignUpBtn.innerHTML = originalText;
+                        facebookSignUpBtn.disabled = false;
+                        
+                        setTimeout(() => {
+                            window.location.href = '/index.html';
+                        }, 2000);
+                    })
+                    .catch((error) => {
+                        console.error('Facebook Sign-Up Error:', error);
+                        
+                        facebookSignUpBtn.innerHTML = originalText;
+                        facebookSignUpBtn.disabled = false;
+                        
+                        let errorMessage = 'Facebook sign-up failed. Please try again.';
+                        
+                        if (error.code === 'auth/popup-closed-by-user') {
+                            errorMessage = 'Sign-up popup was closed. Please try again.';
+                        } else if (error.code === 'auth/cancelled-popup-request') {
+                            errorMessage = 'Sign-up cancelled. Please try again.';
+                        } else if (error.code === 'auth/account-exists-with-different-credential') {
+                            errorMessage = 'An account already exists with this email. Please sign in instead.';
+                        } else if (error.code === 'auth/popup-blocked') {
+                            errorMessage = 'Popup was blocked by browser. Please allow popups for this site.';
+                        } else if (error.code === 'auth/unauthorized-domain') {
+                            errorMessage = 'This domain is not authorized for Facebook sign-up.';
+                        } else if (error.code === 'auth/operation-not-allowed') {
+                            errorMessage = 'Facebook sign-up is not enabled. Please contact support.';
+                        }
+                        
+                        showErrorNotification(errorMessage);
+                        
+                        // Update debug info
+                        debugInfo.innerHTML += `<br>Facebook Error: ${error.code}`;
+                    });
+            });
+            
+            // Check authentication state on page load
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // User is signed in
+                    console.log('User already signed in:', user.email);
+                    debugInfo.innerHTML += `<br>Already signed in: ${user.email}`;
+                    
+                    // Check if we should redirect automatically
+                    if (window.location.pathname.includes('signup.html')) {
+                        showInfoNotification(`Already logged in as ${user.email}. Redirecting...`);
+                        setTimeout(() => {
+                            window.location.href = '/index.html';
+                        }, 1500);
+                    }
+                } else {
+                    // User is signed out
+                    console.log('User is signed out - ready for sign up');
+                    debugInfo.innerHTML += '<br>User signed out - Ready for sign up';
+                }
+            });
+            
+            // Notification Functions
+            function showSuccessNotification(title, message) {
+                const notificationId = 'notification-' + Date.now();
+                const notification = document.createElement('div');
+                notification.className = 'success-notification';
+                notification.id = notificationId;
+                notification.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <div class="notification-progress"></div>
+                `;
+                
+                notificationContainer.appendChild(notification);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }, 3000);
+            }
+            
+            function showErrorNotification(message) {
+                const notificationId = 'notification-' + Date.now();
+                const notification = document.createElement('div');
+                notification.className = 'success-notification';
+                notification.id = notificationId;
+                notification.style.borderLeftColor = '#ff4500';
+                notification.innerHTML = `
+                    <div class="notification-icon" style="background: linear-gradient(135deg, #ff4500, #ff8c00);">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">Sign Up Failed</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <div class="notification-progress" style="background: linear-gradient(90deg, #ff4500, #ff8c00);"></div>
+                `;
+                
+                notificationContainer.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }, 3000);
+            }
+            
+            function showInfoNotification(message) {
+                const notificationId = 'notification-' + Date.now();
+                const notification = document.createElement('div');
+                notification.className = 'success-notification';
+                notification.id = notificationId;
+                notification.style.borderLeftColor = '#ff8c00';
+                notification.innerHTML = `
+                    <div class="notification-icon" style="background: linear-gradient(135deg, #ff8c00, #ff4500);">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">Information</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <div class="notification-progress" style="background: linear-gradient(90deg, #ff8c00, #ff4500);"></div>
+                `;
+                
+                notificationContainer.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }, 3000);
+            }
+            
+            // Smooth back to home animation
+            backHomeLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.body.style.opacity = '0.7';
+                setTimeout(() => {
+                    window.location.href = this.getAttribute('href');
+                }, 300);
+            });
+        }
+    </script>
+</body>
+</html>

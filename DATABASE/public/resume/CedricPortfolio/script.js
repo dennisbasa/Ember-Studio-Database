@@ -1,3 +1,22 @@
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCXpaV1WTVSi4_0WvjmUehuEtIVoz0SP5M",
+  authDomain: "emberstudio-f434a.firebaseapp.com",
+  projectId: "emberstudio-f434a",
+  storageBucket: "emberstudio-f434a.firebasestorage.app",
+  messagingSenderId: "1073426265450",
+  appId: "1:1073426265450:web:713d6e2035e9b009fd6113",
+  measurementId: "G-EPS9CK6J57"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
 const typedText = document.querySelector(".typed-text");
 const words = ["Photography","Photo Editing","Video Editing"];
 let wordIndex = 0;

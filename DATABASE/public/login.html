@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Sign Up | Ember Studio</title>
+
+    <link rel="icon" href="/public/assets/logo/logo.png">
+    <link rel="stylesheet" href="/public/style.css">
+    
+    <!-- Font Awesome with fix for tracking prevention -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" crossorigin="anonymous">
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { 
+            getAuth, 
+            setPersistence, 
+            signInWithEmailAndPassword, 
+            signInWithPopup, 
+            signInWithRedirect,
+            getRedirectResult,
+            sendPasswordResetEmail,
+            onAuthStateChanged,
+            browserLocalPersistence,
+            browserSessionPersistence 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            GoogleAuthProvider,
+            FacebookAuthProvider 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXpaV1WTVSi4_0WvjmUehuEtIVoz0SP5M",
+            authDomain: "emberstudio-f434a.firebaseapp.com",
+            projectId: "emberstudio-f434a",
+            storageBucket: "emberstudio-f434a.firebasestorage.app",
+            messagingSenderId: "1073426265450",
+            appId: "1:1073426265450:web:713d6e2035e9b009fd6113",
+            measurementId: "G-EPS9CK6J57"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        
+        // Make Firebase available globally
+        window.firebaseAuth = auth;
+        window.firebaseApp = app;
+        window.firebase = {
+            setPersistence,
+            signInWithEmailAndPassword,
+            signInWithPopup,
+            signInWithRedirect,
+            getRedirectResult,
+            sendPasswordResetEmail,
+            onAuthStateChanged,
+            browserLocalPersistence,
+            browserSessionPersistence,
+            GoogleAuthProvider,
+            FacebookAuthProvider
+        };
+        
+        console.log("🔥 Firebase initialized successfully!");
+        console.log("📱 Auth Domain:", firebaseConfig.authDomain);
+        console.log("🌐 Project ID:", firebaseConfig.projectId);
+    </script>
+
+    <style>
+        .login-page {
+            min-height: 100vh;
+            background-image: url('/public/assets/background/login.png');
+            background-color: rgba(10, 10, 10, 0.5); 
+            background-blend-mode: overlay; 
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            background-attachment: fixed; 
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid rgba(255, 69, 0, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff4500, #ff8c00);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+        }
+
+        .login-logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .login-logo p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff4500;
+            font-size: 1.1rem;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: #ff4500;
+            background: rgba(255, 69, 0, 0.05);
+            box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.1);
+        }
+
+        .input-with-icon input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            accent-color: #ff4500;
+        }
+
+        .forgot-password {
+            color: #ff4500;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #ff8c00;
+            text-decoration: underline;
+        }
+
+        .login-button {
+            background: linear-gradient(135deg, #ff4500, #ff8c00);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.9rem;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.google:hover {
+            border-color: #DB4437;
+            background: rgba(219, 68, 55, 0.1);
+        }
+
+        .social-btn.facebook:hover {
+            border-color: #DB4437;
+            background: rgba(51, 51, 51, 0.1);
+        }
+
+        .signup-link {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .signup-link a {
+            color: #ff4500;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #ff8c00;
+            text-decoration: underline;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+
+        .back-home a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-home a:hover {
+            color: #ff4500;
+        }
+
+        /* SUCCESS NOTIFICATION STYLES */
+        .notification-container {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .success-notification {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-left: 4px solid #00ff88;
+            border-radius: 12px;
+            padding: 20px 25px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .success-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .notification-message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00cc6a);
+            width: 100%;
+            border-radius: 0 0 12px 12px;
+            transform-origin: left;
+            animation: progressBar 3s linear forwards;
+        }
+
+        @keyframes progressBar {
+            0% {
+                transform: scaleX(1);
+            }
+            100% {
+                transform: scaleX(0);
+            }
+        }
+
+        @keyframes successCheck {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .notification-icon i {
+            animation: successCheck 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 40px 20px;
+                margin: 0 10px;
+            }
+
+            .login-logo h1 {
+                font-size: 2rem;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .success-notification {
+                min-width: 280px;
+                max-width: 280px;
+                right: 10px;
+                top: 20px;
+            }
+
+            .notification-container {
+                right: 10px;
+                top: 20px;
+            }
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 10000;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-home">
+        <a href="/public/embers.html">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="login-page">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="/public/assets/logo/logo.png" alt="Ember Studio Logo">
+                <h1>EMBER STUDIO</h1>
+                <p>Welcome back!</p>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your email" 
+                            required
+                            autocomplete="email"
+                            inputmode="email"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password" 
+                            required
+                            autocomplete="current-password"
+                            inputmode="text"
+                        >
+                    </div>
+                    <div class="remember-forgot">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember" id="remember">
+                            Remember me
+                        </label>
+                        <a href="#forgot" class="forgot-password">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn google" id="googleSignIn">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="social-btn facebook" id="facebookSignIn">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                </div>
+
+                <p class="signup-link">
+                    Don't have an account? <a href="/public/signup.html">Sign up here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Debug Panel (remove in production) -->
+    <div class="debug-panel" id="debugPanel" style="display: none;">
+        <strong>Debug Info:</strong>
+        <div id="debugInfo"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Firebase to load
+            const checkFirebase = setInterval(() => {
+                if (window.firebase && window.firebaseAuth) {
+                    clearInterval(checkFirebase);
+                    initApp();
+                }
+            }, 100);
+
+            function initApp() {
+                console.log('=== 🔥 FIREBASE DEBUG INFO ===');
+                console.log('Firebase loaded:', !!window.firebase);
+                console.log('Auth object:', !!window.firebaseAuth);
+                console.log('Current URL:', window.location.href);
+                console.log('Hostname:', window.location.hostname);
+                console.log('Protocol:', window.location.protocol);
+                console.log('==============================');
+
+                const loginForm = document.getElementById('loginForm');
+                const backHomeLink = document.querySelector('.back-home a');
+                const notificationContainer = document.getElementById('notificationContainer');
+                const googleSignInBtn = document.getElementById('googleSignIn');
+                const facebookSignInBtn = document.getElementById('facebookSignIn');
+                const debugPanel = document.getElementById('debugPanel');
+                const debugInfo = document.getElementById('debugInfo');
+                
+                // Show debug panel
+                debugPanel.style.display = 'block';
+                debugInfo.innerHTML = `
+                    Hostname: ${window.location.hostname}<br>
+                    Protocol: ${window.location.protocol}<br>
+                    Firebase: Loaded ✅
+                `;
+                
+                // Form submission handler
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    const rememberMe = document.getElementById('remember').checked;
+                    
+                    // Simple validation
+                    if (!email || !password) {
+                        showErrorNotification('Please fill in all fields');
+                        return;
+                    }
+                    
+                    // Firebase Email/Password Authentication
+                    authenticateWithFirebase(email, password, rememberMe);
+                });
+                
+                // Google Sign-In Handler with multiple fallback options
+                googleSignInBtn.addEventListener('click', function() {
+                    console.log('🔵 Google Sign-In clicked');
+                    debugInfo.innerHTML += '<br>Google button clicked';
+                    
+                    // Test popups first
+                    if (!testPopupWindow()) {
+                        showErrorNotification('Popups are blocked. Please allow popups for this site.');
+                        return;
+                    }
+                    
+                    // Try Google Sign-In
+                    signInWithGoogle();
+                });
+                
+                // Facebook Sign-In Handler
+                facebookSignInBtn.addEventListener('click', function() {
+                    signInWithFacebook();
+                });
+                
+                document.querySelector('.forgot-password').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handlePasswordReset();
+                });
+                
+                // Test if popups work
+                function testPopupWindow() {
+                    try {
+                        const testPopup = window.open('', '_blank', 'width=100,height=100,left=0,top=0');
+                        if (testPopup) {
+                            testPopup.close();
+                            return true;
+                        }
+                        return false;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+                
+                // Firebase Authentication Functions
+                function authenticateWithFirebase(email, password, rememberMe) {
+                    const submitBtn = loginForm.querySelector('.login-button');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+                    submitBtn.disabled = true;
+                    
+                    // Set persistence based on "Remember me" selection
+                    const persistence = rememberMe 
+                        ? window.firebase.browserLocalPersistence 
+                        : window.firebase.browserSessionPersistence;
+                    
+                    window.firebase.setPersistence(window.firebaseAuth, persistence)
+                        .then(() => {
+                            // Sign in with email and password
+                            return window.firebase.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        })
+                        .then((userCredential) => {
+                            // Signed in successfully
+                            const user = userCredential.user;
+                            
+                            showSuccessNotification(
+                                'Login Successful!',
+                                `Welcome back, ${user.email}! Redirecting to home page...`
+                            );
+                            
+                            // Store user info if remember me is checked
+                            if (rememberMe) {
+                                localStorage.setItem('emberStudioUser', user.email);
+                                localStorage.setItem('emberStudioLoggedIn', 'true');
+                                localStorage.setItem('emberStudioUID', user.uid);
+                            } else {
+                                sessionStorage.setItem('emberStudioUser', user.email);
+                                sessionStorage.setItem('emberStudioLoggedIn', 'true');
+                                sessionStorage.setItem('emberStudioUID', user.uid);
+                            }
+                            
+                            // Reset button state
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                            
+                            // Redirect to home page after delay
+                            setTimeout(() => {
+                                window.location.href = '/embers.html';
+                            }, 2000);
+                        })
+                        .catch((error) => {
+                            // Handle errors
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                            
+                            let errorMessage = 'Login failed. Please try again.';
+                            
+                            switch(error.code) {
+                                case 'auth/invalid-email':
+                                    errorMessage = 'Invalid email address.';
+                                    break;
+                                case 'auth/user-disabled':
+                                    errorMessage = 'This account has been disabled.';
+                                    break;
+                                case 'auth/user-not-found':
+                                    errorMessage = 'No account found with this email.';
+                                    break;
+                                case 'auth/wrong-password':
+                                    errorMessage = 'Incorrect password. Please try again.';
+                                    break;
+                                case 'auth/too-many-requests':
+                                    errorMessage = 'Too many failed attempts. Please try again later.';
+                                    break;
+                                case 'auth/network-request-failed':
+                                    errorMessage = 'Network error. Please check your connection.';
+                                    break;
+                                case 'auth/invalid-credential':
+                                    errorMessage = 'Invalid login credentials. Please check your email and password.';
+                                    break;
+                            }
+                            
+                            showErrorNotification(errorMessage);
+                            
+                            // Clear password field on error
+                            document.getElementById('password').value = '';
+                        });
+                }
+                
+                // Google Sign-In Function with detailed error handling
+                function signInWithGoogle() {
+                    console.log('🔄 Starting Google Sign-In process...');
+                    debugInfo.innerHTML += '<br>Starting Google Sign-In...';
+                    
+                    // Create Google provider instance
+                    const provider = new window.firebase.GoogleAuthProvider();
+                    
+                    // Add scopes
+                    provider.addScope('profile');
+                    provider.addScope('email');
+                    
+                    // Set custom parameters
+                    provider.setCustomParameters({
+                        prompt: 'select_account'
+                    });
+                    
+                    // Save button state
+                    const originalText = googleSignInBtn.innerHTML;
+                    googleSignInBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+                    googleSignInBtn.disabled = true;
+                    
+                    // Sign in with popup
+                    window.firebase.signInWithPopup(window.firebaseAuth, provider)
+                        .then((result) => {
+                            console.log('✅ Google Sign-In Success!');
+                            debugInfo.innerHTML += '<br>✅ Google Sign-In Success!';
+                            
+                            // This gives you a Google Access Token
+                            const credential = window.firebase.GoogleAuthProvider.credentialFromResult(result);
+                            const token = credential.accessToken;
+                            
+                            // The signed-in user info
+                            const user = result.user;
+                            
+                            console.log('User info:', {
+                                email: user.email,
+                                name: user.displayName,
+                                uid: user.uid
+                            });
+                            
+                            // Store user info
+                            localStorage.setItem('emberStudioUser', user.email);
+                            localStorage.setItem('emberStudioLoggedIn', 'true');
+                            localStorage.setItem('emberStudioUID', user.uid);
+                            localStorage.setItem('emberStudioName', user.displayName || 'User');
+                            localStorage.setItem('emberStudioPhoto', user.photoURL || '');
+                            
+                            showSuccessNotification(
+                                'Google Login Successful!',
+                                `Welcome ${user.displayName || 'User'}! Redirecting to home page...`
+                            );
+                            
+                            // Reset button state
+                            googleSignInBtn.innerHTML = originalText;
+                            googleSignInBtn.disabled = false;
+                            
+                            // Redirect after delay
+                            setTimeout(() => {
+                                window.location.href = '/embers.html';
+                            }, 2000);
+                        })
+                        .catch((error) => {
+                            console.error('❌ Google Sign-In Error:', error);
+                            debugInfo.innerHTML += `<br>❌ Error: ${error.code}`;
+                            
+                            // Reset button state
+                            googleSignInBtn.innerHTML = originalText;
+                            googleSignInBtn.disabled = false;
+                            
+                            let errorMessage = 'Google login failed. Please try again.';
+                            let showConsoleError = false;
+                            
+                            // Detailed error handling
+                            switch(error.code) {
+                                case 'auth/popup-closed-by-user':
+                                    errorMessage = 'Login popup was closed. Please try again.';
+                                    break;
+                                case 'auth/cancelled-popup-request':
+                                    errorMessage = 'Login cancelled. Please try again.';
+                                    break;
+                                case 'auth/account-exists-with-different-credential':
+                                    errorMessage = 'An account already exists with this email. Please use email/password login.';
+                                    break;
+                                case 'auth/popup-blocked':
+                                    errorMessage = 'Popup was blocked by browser. Please allow popups for this site.';
+                                    break;
+                                case 'auth/unauthorized-domain':
+                                    errorMessage = 'This domain is not authorized for Google login.';
+                                    console.error('⚠️ UNAUTHORIZED DOMAIN. Check Firebase Console → Authentication → Settings → Authorized Domains');
+                                    showConsoleError = true;
+                                    break;
+                                case 'auth/operation-not-allowed':
+                                    errorMessage = 'Google sign-in is not enabled. Please enable it in Firebase Console.';
+                                    console.error('⚠️ GOOGLE SIGN-IN NOT ENABLED. Go to Firebase Console → Authentication → Sign-in method → Enable Google');
+                                    showConsoleError = true;
+                                    break;
+                                case 'auth/configuration-not-found':
+                                    errorMessage = 'Google sign-in is not properly configured.';
+                                    break;
+                                case 'auth/invalid-oauth-client':
+                                    errorMessage = 'OAuth client configuration error.';
+                                    break;
+                                case 'auth/network-request-failed':
+                                    errorMessage = 'Network error. Please check your connection.';
+                                    break;
+                            }
+                            
+                            showErrorNotification(errorMessage);
+                            
+                            if (showConsoleError) {
+                                console.error('🔥 FIREBASE CONFIGURATION CHECKLIST:');
+                                console.error('1. Go to Firebase Console → Authentication → Sign-in method');
+                                console.error('2. Enable Google provider (toggle ON)');
+                                console.error('3. Add support email and save');
+                                console.error('4. Go to Authentication → Settings → Authorized domains');
+                                console.error('5. Make sure "localhost" is in the list');
+                                console.error('6. If using custom domain, add it to authorized domains');
+                            }
+                            
+                            // Log full error for debugging
+                            console.error('Full error object:', {
+                                code: error.code,
+                                message: error.message,
+                                email: error.email,
+                                credential: error.credential
+                            });
+                        });
+                }
+                
+                // Alternative: Google Sign-In with Redirect (fallback)
+                function signInWithGoogleRedirect() {
+                    console.log('Trying Google Sign-In with redirect...');
+                    const provider = new window.firebase.GoogleAuthProvider();
+                    
+                    window.firebase.signInWithRedirect(window.firebaseAuth, provider)
+                        .then(() => {
+                            console.log('Redirect initiated');
+                        })
+                        .catch((error) => {
+                            console.error('Redirect error:', error);
+                            showErrorNotification('Redirect failed. Please try popup method.');
+                        });
+                }
+                
+                // Handle redirect result
+                window.firebase.getRedirectResult(window.firebaseAuth)
+                    .then((result) => {
+                        if (result.user) {
+                            console.log('User signed in via redirect:', result.user.email);
+                            showSuccessNotification(
+                                'Login Successful!',
+                                `Welcome ${result.user.displayName}!`
+                            );
+                            setTimeout(() => {
+                                window.location.href = '/embers.html';
+                            }, 2000);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Redirect result error:', error);
+                    });
+                
+                // Facebook Sign-In Function
+                function signInWithFacebook() {
+                    const provider = new window.firebase.FacebookAuthProvider();
+                    provider.addScope('email');
+                    provider.addScope('public_profile');
+                    
+                    const originalText = facebookSignInBtn.innerHTML;
+                    facebookSignInBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+                    facebookSignInBtn.disabled = true;
+                    
+                    window.firebase.signInWithPopup(window.firebaseAuth, provider)
+                        .then((result) => {
+                            const user = result.user;
+                            
+                            // Store user info
+                            localStorage.setItem('emberStudioUser', user.email || '');
+                            localStorage.setItem('emberStudioLoggedIn', 'true');
+                            localStorage.setItem('emberStudioUID', user.uid);
+                            localStorage.setItem('emberStudioName', user.displayName || 'User');
+                            
+                            showSuccessNotification(
+                                'Facebook Login Successful!',
+                                `Welcome ${user.displayName || 'User'}! Redirecting to home page...`
+                            );
+                            
+                            facebookSignInBtn.innerHTML = originalText;
+                            facebookSignInBtn.disabled = false;
+                            
+                            setTimeout(() => {
+                                window.location.href = '/embers.html';
+                            }, 2000);
+                        })
+                        .catch((error) => {
+                            console.error('Facebook Sign-In Error:', error);
+                            
+                            facebookSignInBtn.innerHTML = originalText;
+                            facebookSignInBtn.disabled = false;
+                            
+                            let errorMessage = 'Facebook login failed. Please try again.';
+                            
+                            if (error.code === 'auth/popup-closed-by-user') {
+                                errorMessage = 'Login popup was closed. Please try again.';
+                            } else if (error.code === 'auth/cancelled-popup-request') {
+                                errorMessage = 'Login cancelled. Please try again.';
+                            } else if (error.code === 'auth/account-exists-with-different-credential') {
+                                errorMessage = 'An account already exists with this email. Please use another login method.';
+                            } else if (error.code === 'auth/popup-blocked') {
+                                errorMessage = 'Popup was blocked by browser. Please allow popups for this site.';
+                            } else if (error.code === 'auth/unauthorized-domain') {
+                                errorMessage = 'This domain is not authorized for Facebook login.';
+                            } else if (error.code === 'auth/operation-not-allowed') {
+                                errorMessage = 'Facebook sign-in is not enabled. Please enable it in Firebase Console.';
+                            }
+                            
+                            showErrorNotification(errorMessage);
+                        });
+                }
+                
+                // Password Reset Function
+                function handlePasswordReset() {
+                    const email = document.getElementById('email').value.trim();
+                    
+                    if (!email) {
+                        showInfoNotification('Please enter your email address first');
+                        document.getElementById('email').focus();
+                        return;
+                    }
+                    
+                    // Validate email format
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        showErrorNotification('Please enter a valid email address');
+                        return;
+                    }
+                    
+                    const forgotLink = document.querySelector('.forgot-password');
+                    const originalText = forgotLink.textContent;
+                    forgotLink.textContent = 'Sending...';
+                    forgotLink.style.pointerEvents = 'none';
+                    
+                    window.firebase.sendPasswordResetEmail(window.firebaseAuth, email)
+                        .then(() => {
+                            showSuccessNotification(
+                                'Password Reset Email Sent',
+                                `Check your inbox at ${email} for password reset instructions. The email may take a few minutes to arrive.`
+                            );
+                        })
+                        .catch((error) => {
+                            let errorMessage = 'Failed to send reset email. Please try again.';
+                            
+                            if (error.code === 'auth/user-not-found') {
+                                errorMessage = 'No account found with this email address.';
+                            } else if (error.code === 'auth/invalid-email') {
+                                errorMessage = 'Invalid email address format.';
+                            } else if (error.code === 'auth/too-many-requests') {
+                                errorMessage = 'Too many attempts. Please try again later.';
+                            } else if (error.code === 'auth/missing-email') {
+                                errorMessage = 'Please enter an email address.';
+                            }
+                            
+                            showErrorNotification(errorMessage);
+                        })
+                        .finally(() => {
+                            forgotLink.textContent = originalText;
+                            forgotLink.style.pointerEvents = 'auto';
+                        });
+                }
+                
+                // Check authentication state on page load
+                window.firebase.onAuthStateChanged(window.firebaseAuth, (user) => {
+                    if (user) {
+                        // User is signed in
+                        console.log('User already signed in:', user.email);
+                        
+                        // Pre-fill email if user chose "remember me"
+                        document.getElementById('email').value = user.email;
+                        document.getElementById('remember').checked = true;
+                        
+                        // Check if we should redirect automatically
+                        if (window.location.pathname.includes('login.html')) {
+                            showInfoNotification(`Already logged in as ${user.email}. Redirecting...`);
+                            setTimeout(() => {
+                                window.location.href = '/embers.html';
+                            }, 1500);
+                        }
+                    } else {
+                        // User is signed out
+                        console.log('User is signed out');
+                    }
+                });
+                
+                // Notification Functions
+                function showSuccessNotification(title, message) {
+                    const notificationId = 'notification-' + Date.now();
+                    const notification = document.createElement('div');
+                    notification.className = 'success-notification';
+                    notification.id = notificationId;
+                    notification.innerHTML = `
+                        <div class="notification-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${title}</div>
+                            <div class="notification-message">${message}</div>
+                        </div>
+                        <div class="notification-progress"></div>
+                    `;
+                    
+                    notificationContainer.appendChild(notification);
+                    
+                    // Trigger animation
+                    setTimeout(() => {
+                        notification.classList.add('show');
+                    }, 10);
+                    
+                    // Auto remove after 3 seconds
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.parentNode.removeChild(notification);
+                            }
+                        }, 500);
+                    }, 3000);
+                }
+                
+                function showErrorNotification(message) {
+                    const notificationId = 'notification-' + Date.now();
+                    const notification = document.createElement('div');
+                    notification.className = 'success-notification';
+                    notification.id = notificationId;
+                    notification.style.borderLeftColor = '#ff4500';
+                    notification.innerHTML = `
+                        <div class="notification-icon" style="background: linear-gradient(135deg, #ff4500, #ff8c00);">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Login Failed</div>
+                            <div class="notification-message">${message}</div>
+                        </div>
+                        <div class="notification-progress" style="background: linear-gradient(90deg, #ff4500, #ff8c00);"></div>
+                    `;
+                    
+                    notificationContainer.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.classList.add('show');
+                    }, 10);
+                    
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.parentNode.removeChild(notification);
+                            }
+                        }, 500);
+                    }, 3000);
+                }
+                
+                function showInfoNotification(message) {
+                    const notificationId = 'notification-' + Date.now();
+                    const notification = document.createElement('div');
+                    notification.className = 'success-notification';
+                    notification.id = notificationId;
+                    notification.style.borderLeftColor = '#ff8c00';
+                    notification.innerHTML = `
+                        <div class="notification-icon" style="background: linear-gradient(135deg, #ff8c00, #ff4500);">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Information</div>
+                            <div class="notification-message">${message}</div>
+                        </div>
+                        <div class="notification-progress" style="background: linear-gradient(90deg, #ff8c00, #ff4500);"></div>
+                    `;
+                    
+                    notificationContainer.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.classList.add('show');
+                    }, 10);
+                    
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.parentNode.removeChild(notification);
+                            }
+                        }, 500);
+                    }, 3000);
+                }
+                
+                // Check for stored user
+                const storedUser = localStorage.getItem('emberStudioUser') || sessionStorage.getItem('emberStudioUser');
+                if (storedUser) {
+                    document.getElementById('email').value = storedUser;
+                    document.getElementById('remember').checked = true;
+                }
+                
+                // Smooth back to home animation
+                backHomeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.body.style.opacity = '0.7';
+                    setTimeout(() => {
+                        window.location.href = this.getAttribute('href');
+                    }, 300);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

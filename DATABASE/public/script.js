@@ -1,3 +1,6 @@
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // Sidebar functionality
     const sidebar = document.getElementById("sidebar");

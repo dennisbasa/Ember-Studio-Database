@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="AA2B1D">
     <title>Ember Studio</title>
 
-    <link rel="icon" href="/assets/logo/logo.png">
-    <link rel="stylesheet" href="/style/style.css">
+    <link rel="icon" href="/public/assets/logo/logo.png">
+    <link rel="stylesheet" href="/public/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -15,19 +16,19 @@
     <section class="hero-section">
         <div class="parallax-background">
             <div class="parallax-layer layer-1" data-depth="0.1">
-                <img src="/assets/background/bg1.png" alt="layer-1">
+                <img src="/public/assets/background/bg1.png" alt="layer-1">
             </div>
             <div class="parallax-layer layer-2" data-depth="0.2">
-                <img src="/assets/background/bg2.png" alt="layer-2">
+                <img src="/public/assets/background/bg2.png" alt="layer-2">
             </div>
             <div class="parallax-layer layer-3" data-depth="0.3">
-                <img src="/assets/background/bg3.png" alt="layer-3">
+                <img src="/public/assets/background/bg3.png" alt="layer-3">
             </div>
             <div class="parallax-layer layer-4" data-depth="0.4">
-                <img src="/assets/background/bg4.png" alt="layer-4">
+                <img src="/public/assets/background/bg4.png" alt="layer-4">
             </div>
             <div class="parallax-layer layer-5" data-depth="0.5">
-                <img src="/assets/background/bg5.png" alt="layer-5">
+                <img src="/public/assets/background/bg5.png" alt="layer-5">
             </div>
             <div class="parallax-layer overlay" data-depth="0"></div>
         </div>
@@ -37,14 +38,14 @@
         <!-- Header -->
         <header>
             <a href="#" class="logo-link">
-                <img src="/assets/logo/logo.png" class="logo">
+                <img src="/public/assets/logo/logo.png" class="logo">
             </a>
 
             <nav class="navigation">
                 <ul>
                     <li><a href="#" id="homeLink">Home</a></li>
-                    <li><a href="/login.html" id="loginButton">Log In</a></li>
-                    <li><a href="#" id="signupButton" class="signup-btn">Sign Up</a></li>
+                    <li><a href="/public/login.html" id="loginButton">Log In</a></li>
+                    <li><a href="/public/signup.html" id="signupButton" class="signup-btn">Sign Up</a></li>
                     <li>
                         <a href="#" id="search">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -65,7 +66,7 @@
                 <h1 class="hero-title">EMBER <span class="highlight">STUDIO</span></h1>
                 <p class="hero-subtitle">Just like the CCS Phoenix we will rise from the Ashes</p>
                 <div class="hero-cta">
-                    <a href="#login"><button class="cta-primary">Get Started</button></a>
+                    <a href="#loginButton"><button class="cta-primary">Get Started</button></a>
                     <button class="cta-secondary">
                         <i class="fas fa-play-circle"></i> View
                     </button>
@@ -115,7 +116,7 @@
         </ul>
 
         <div class="sidebar-profile">
-            <img src="/assets/extra/pfp.jpg" class="profile-pic">
+            <img src="/public/assets/extra/pfp.jpg" class="profile-pic">
             <div class="profile-info">
                 <span class="profile-name">WELCOME</span>
                 <span class="profile-role">Guest User</span>
@@ -137,7 +138,7 @@
                 <div class="about-content">
                     <div class="about-image">
                         <div class="image-frame">
-                            <img src="/assets/logo/logo.png" alt="Ember Studio Team">
+                            <img src="/public/assets/logo/logo.png" alt="Ember Studio Team">
                             <div class="image-overlay"></div>
                         </div>
                     </div>
@@ -177,7 +178,7 @@
                 
                 <div class="featured-work">
                     <div class="work-image">
-                        <img src="/assets/extra/endlessshore (1).png" alt="Endless Shore">
+                        <img src="/public/assets/extra/endlessshore (1).png" alt="Endless Shore">
                         <div class="work-badge">FEATURED</div>
                     </div>
                     <div class="work-details">
@@ -266,30 +267,31 @@
                 
                 <div class="gallery-grid">
                     <div class="gallery-item">
-                        
-                        <img src="/assets/artworks/ECHOES OF REALITY (1).jpg" alt="Project 1">
+                        <a href="/public/resume/ANDAL/workportfolio.html" class="gallery-link">
+                        <img src="/public/assets/artworks/ECHOES OF REALITY (1).jpg" alt="Project 1">
                         <div class="gallery-overlay">
                             <h4>Echoes of Reality</h4>
                             <p>Photoshop</p>
                         </div>
+                        </a>
                     </div>
                     <div class="gallery-item">
-                        <img src="/assets/artworks/art_productsamples.jpeg" alt="Project 2">
+                        <img src="/public/assets/artworks/art_productsamples.jpeg" alt="Project 2">
                         <div class="gallery-overlay">
                             <h4>Art Product Button Pins</h4>
                             <p>Artwork</p>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="/assets/artworks/photo manipulation.png" alt="Project 3">
+                        <img src="/public/assets/artworks/photo manipulation.png" alt="Project 3">
                         <div class="gallery-overlay">
                             <h4>Fantasy Dream Like</h4>
                             <p>Photoshop</p>
                         </div>
                     </div>
                    <div class="gallery-item">
-                    <a href="/resume/navarro.html" class="gallery-link">
-                    <img src="/assets/extra/endlessshore (1).png" alt="Project 4">
+                    <a href="/public/resume/navarro.html" class="gallery-link">
+                    <img src="/public/assets/extra/endlessshore (1).png" alt="Project 4">
                     <div class="gallery-overlay">
                       <h4>Endless Shore</h4>
                      <p>Splash Art</p>
@@ -315,21 +317,24 @@
             <p class="subtitle">EMBER STUDIO CONSISTS OF 6 BSEMC STUDENTS</p>
         </div>
         
+
+        <a href="/public/resume/ANDAL/workportfolio.html">
         <div class="team-card" id="team-card-1">
             <div class="avatar">
-                <img src="/assets/team/ange.png" alt="Angelyn Ann Andal">
+                <img src="/public/assets/team/ange.png" alt="Angelyn Ann Andal">
             </div>
             <div class="info">
                 <h3>ANDAL, ANGELYN ANN</h3>
                 <span>ARTIST</span>
             </div>
         </div>
+        </a>
 
 
-        <a href="/resume/CedricPortfolio/index.html">
+        <a href="/public/resume/CedricPortfolio/index.html">
         <div class="team-card" id="team-card-2">
             <div class="avatar">
-                <img src="/assets/team/cj.png" alt="Cedric John Apalit">
+                <img src="/public/assets/team/cj.png" alt="Cedric John Apalit">
             </div>
             <div class="info">
                 <h3>APALIT, CEDRIC JOHN</h3>
@@ -340,17 +345,17 @@
 
         <div class="team-card" id="team-card-3">
             <div class="avatar">
-                <img src="/assets/team/tatay.png" alt="Dennis Basa">
+                <img src="/public/assets/team/tatay.png" alt="Dennis Basa">
             </div>
             <div class="info">
                 <h3>BASA, DENNIS</h3>
-                <span>TATAY NG BAYAN</span>
+                <span>GAME DEVELOPER</span>
             </div>
         </div>
 
         <div class="team-card" id="team-card-4">
             <div class="avatar">
-                <img src="/assets/team/ange.png" alt="Aleizza Joy Daguman">
+                <img src="/public/assets/team/ange.png" alt="Aleizza Joy Daguman">
             </div>
             <div class="info">
                 <h3>DAGUMAN, ALEIZZA JOY</h3>
@@ -358,11 +363,11 @@
             </div>
         </div>
 
-        <a href="/resume/MY OWN PORTFOLIO/resume.html" class="team-card-link">
+        <a href="/public/resume/MY OWN PORTFOLIO/resume.html" class="team-card-link">
 
         <div class="team-card" id="team-card-5">
             <div class="avatar">
-                <img src="/assets/team/lloyd.png" alt="Jan Loyd De Dios">
+                <img src="/public/assets/team/lloyd.png" alt="Jan Loyd De Dios">
             </div>
             <div class="info">
                 <h3>DE DIOS, JAN LOYD</h3>
@@ -372,11 +377,11 @@
         </a>
 
         
-        <a href="/resume/navarro.html">
+        <a href="/public/resume/navarro.html">
         <div class="team-card" id="team-card-6">
             
             <div class="avatar">
-                <img src="/assets/team/cza.png" alt="Czarina Marie Navarro">
+                <img src="/public/assets/team/cza.png" alt="Czarina Marie Navarro">
             </div>
             <div class="info">
                 <h3>NAVARRO, CZARINA MARIE</h3>
@@ -410,7 +415,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <img src="/assets/logo/logo.png" alt="Ember Studio Logo">
+                        <img src="/public/assets/logo/logo.png" alt="Ember Studio Logo">
                         
                     </div>
                     <p class="footer-description">
@@ -467,7 +472,7 @@
         </div>
     </footer>
 
-    <script src="/script/script.js"></script>
+    <script src="/public/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
 </body>
 </html>

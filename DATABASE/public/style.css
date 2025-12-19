@@ -246,7 +246,6 @@ header.scrolled {
 
 .hamburger:hover {
     background: rgba(255, 69, 0, 0.2);
-    transform: rotate(90deg);
 }
 
 /* Hero Content */
@@ -445,6 +444,7 @@ section {
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
+    text-align: justify;
 }
 
 /* About Section */
@@ -601,6 +601,7 @@ section {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.8;
     margin-bottom: 25px;
+    text-align: justify;
 }
 
 .work-tech {
@@ -1192,6 +1193,7 @@ section {
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.6;
     margin-bottom: 25px;
+    text-align: justify;
 }
 
 .footer-social {
